@@ -25,21 +25,43 @@ pub enum TryFromStringForNonEmptyStringError {
 #[derive(Getters, Clone, Debug)]
 pub struct Human {
     name: String,
+    #[getter(copy)]
     age: u32,
 }
 
 #[derive(Getters, Clone, Debug)]
 pub struct Adult {
     name: NonEmptyString,
+    #[getter(copy)]
     age: u32,
 }
 
 impl TryFrom<Human> for Adult {
-    type Error = ();
+    type Error = ConvertHumanToAdultError;
 
-    fn try_from(_input: Human) -> Result<Self, Self::Error> {
-        // TODO: Ensure that name is NonEmptyString
-        // TODO: Ensure that age > 18
-        todo!()
+    fn try_from(input: Human) -> Result<Self, Self::Error> {
+        use ConvertHumanToAdultError::*;
+        let Human {
+            name,
+            age,
+        } = input;
+        let name_result = NonEmptyString::try_from(name);
+        let is_adult = age > 18;
+        match (name_result, is_adult) {
+            (Ok(name), true) => Ok(Self {
+                name,
+                age,
+            }),
+            (name_result, _) => Err(ConversionFailed {
+                name_result,
+                age,
+            }),
+        }
     }
+}
+
+#[derive(Error, Debug)]
+pub enum ConvertHumanToAdultError {
+    #[error("failed to convert human to adult")]
+    ConversionFailed { name_result: Result<NonEmptyString, TryFromStringForNonEmptyStringError>, age: u32 },
 }
