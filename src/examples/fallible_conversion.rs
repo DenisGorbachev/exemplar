@@ -1,25 +1,20 @@
 use derive_getters::Getters;
 use derive_more::Deref;
+use errgonomic::handle_bool;
 use thiserror::Error;
 
 #[derive(Deref, Clone, Debug)]
 pub struct NonEmptyString(String);
 
 /// This is an example of a "simple" fallible conversion
-/// `if` is used instead of `match` because there's only one boolean constraint
-/// `handle_bool!` is not used because there's only one boolean constraint
+/// `handle_bool!` is used because there's only one boolean constraint
 impl TryFrom<String> for NonEmptyString {
     type Error = ConvertStringToNonEmptyStringError;
 
     fn try_from(input: String) -> Result<Self, Self::Error> {
         use ConvertStringToNonEmptyStringError::*;
-        if input.is_empty() {
-            Err(EmptyInput {
-                input,
-            })
-        } else {
-            Ok(Self(input))
-        }
+        handle_bool!(input.is_empty(), EmptyInput, input);
+        Ok(Self(input))
     }
 }
 
