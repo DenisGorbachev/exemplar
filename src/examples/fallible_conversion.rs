@@ -38,6 +38,8 @@ impl TryFrom<Human> for Adult {
     type Error = ();
 
     fn try_from(_input: Human) -> Result<Self, Self::Error> {
+        // TODO: Ensure that name is NonEmptyString
+        // TODO: Ensure that age > 18
         todo!()
     }
 }
