@@ -52,9 +52,10 @@ impl TryFrom<Human> for Adult {
                 name,
                 age,
             }),
-            (name_result, _) => Err(ConversionFailed {
+            (name_result, is_adult) => Err(ConversionFailed {
                 name_result,
                 age,
+                is_adult,
             }),
         }
     }
@@ -63,5 +64,5 @@ impl TryFrom<Human> for Adult {
 #[derive(Error, Debug)]
 pub enum ConvertHumanToAdultError {
     #[error("failed to convert human to adult")]
-    ConversionFailed { name_result: Result<NonEmptyString, TryFromStringForNonEmptyStringError>, age: u32 },
+    ConversionFailed { name_result: Result<NonEmptyString, TryFromStringForNonEmptyStringError>, age: u32, is_adult: bool },
 }
