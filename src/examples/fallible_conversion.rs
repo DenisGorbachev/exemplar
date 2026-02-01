@@ -9,10 +9,10 @@ pub struct NonEmptyString(String);
 /// `if` is used instead of `match` because there's only one boolean constraint
 /// `handle_bool!` is not used because there's only one boolean constraint
 impl TryFrom<String> for NonEmptyString {
-    type Error = TryFromStringForNonEmptyStringError;
+    type Error = ConvertStringToNonEmptyStringError;
 
     fn try_from(input: String) -> Result<Self, Self::Error> {
-        use TryFromStringForNonEmptyStringError::*;
+        use ConvertStringToNonEmptyStringError::*;
         if input.is_empty() {
             Err(EmptyInput {
                 input,
@@ -24,7 +24,7 @@ impl TryFrom<String> for NonEmptyString {
 }
 
 #[derive(Error, Debug)]
-pub enum TryFromStringForNonEmptyStringError {
+pub enum ConvertStringToNonEmptyStringError {
     #[error("expected input to be non-empty")]
     EmptyInput { input: String },
 }
@@ -72,5 +72,5 @@ impl TryFrom<Human> for Adult {
 #[derive(Error, Debug)]
 pub enum ConvertHumanToAdultError {
     #[error("failed to convert human to adult")]
-    ConversionFailed { name_result: Result<NonEmptyString, TryFromStringForNonEmptyStringError>, age: u32, is_adult: bool },
+    ConversionFailed { name_result: Result<NonEmptyString, ConvertStringToNonEmptyStringError>, age: u32, is_adult: bool },
 }
