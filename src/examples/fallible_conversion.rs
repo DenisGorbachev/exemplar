@@ -9,17 +9,17 @@ pub struct NonEmptyString(String);
 /// This is an example of a "simple" fallible conversion
 /// `handle_bool!` is used because there's only one boolean constraint
 impl TryFrom<String> for NonEmptyString {
-    type Error = ConvertStringToNonEmptyStringError;
+    type Error = TryFromStringForNonEmptyStringError;
 
     fn try_from(input: String) -> Result<Self, Self::Error> {
-        use ConvertStringToNonEmptyStringError::*;
+        use TryFromStringForNonEmptyStringError::*;
         handle_bool!(input.is_empty(), EmptyInput, input);
         Ok(Self(input))
     }
 }
 
 #[derive(Error, Debug)]
-pub enum ConvertStringToNonEmptyStringError {
+pub enum TryFromStringForNonEmptyStringError {
     #[error("expected input to be non-empty")]
     EmptyInput { input: String },
 }
@@ -40,10 +40,10 @@ pub struct Adult {
 
 /// This is an example of "normal" fallible conversion
 impl TryFrom<Human> for Adult {
-    type Error = ConvertHumanToAdultError;
+    type Error = TryFromHumanForAdultError;
 
     fn try_from(input: Human) -> Result<Self, Self::Error> {
-        use ConvertHumanToAdultError::*;
+        use TryFromHumanForAdultError::*;
         let Human {
             name,
             age,
@@ -65,7 +65,7 @@ impl TryFrom<Human> for Adult {
 }
 
 #[derive(Error, Debug)]
-pub enum ConvertHumanToAdultError {
+pub enum TryFromHumanForAdultError {
     #[error("failed to convert human to adult")]
-    ConversionFailed { name_result: Result<NonEmptyString, ConvertStringToNonEmptyStringError>, age: u32, is_adult: bool },
+    ConversionFailed { name_result: Result<NonEmptyString, TryFromStringForNonEmptyStringError>, age: u32, is_adult: bool },
 }
