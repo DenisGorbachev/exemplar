@@ -1,5 +1,6 @@
-use clap::{Parser, value_parser};
+use clap::Parser;
 use errgonomic::handle;
+use std::io;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use thiserror::Error;
@@ -7,7 +8,7 @@ use tokio::fs::read_to_string;
 
 #[derive(Parser, Clone, Debug)]
 pub struct PrintCommand {
-    #[arg(short, long, value_parser = value_parser!(PathBuf))]
+    #[arg(short, long)]
     path: PathBuf,
 }
 
@@ -26,5 +27,5 @@ impl PrintCommand {
 #[derive(Error, Debug)]
 pub enum PrintCommandRunError {
     #[error("failed to read file at '{path}'")]
-    ReadToStringFailed { source: std::io::Error, path: PathBuf },
+    ReadToStringFailed { source: io::Error, path: PathBuf },
 }
