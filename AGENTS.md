@@ -512,13 +512,6 @@ Examples:
 
 A pkg that has a remote whose name contains `public` or `pre-public` and ends with `template`.
 
-### Guidelines for `subtype`
-
-- Define newtypes as ordinary tuple structs with explicit `From` / `TryFrom` impls.
-- Use `SerializeTransparent` derive from `subtype` for a refined newtype that must serialize identically to its inner field while using Serde's `try_from` container attr for validated deserialization.
-- Macro calls that begin with `subtype` (for example: `subtype!` and `subtype_string!`) are legacy APIs that expand to newtypes.
-  - Don't use them in new code because their checker and preprocessor concepts have been superseded by explicit conversion impls.
-
 ### Guidelines for `clap`
 
 #### Reqs
@@ -1631,17 +1624,11 @@ title = ""
 workspace = true
 
 [dependencies]
-clap = { version = "4.5.11", features = ["derive", "env"] }
 derive-getters = { version = "0.5.0", features = ["auto_copy_getters"] }
-derive-new = "0.7.0"
 derive_more = { version = "2.1.1", features = ["full"] }
+clap = { version = "4.5.11", features = ["derive", "env"] }
 errgonomic = { git = "https://github.com/DenisGorbachev/errgonomic" }
-itertools = "0.14.0"
-standard-traits = { git = "https://github.com/DenisGorbachev/standard-traits" }
-strum = { version = "0.27.2", features = ["derive"] }
-stub-macro = { version = "0.2.1" }
-subtype = { git = "https://github.com/DenisGorbachev/subtype" }
-thiserror = "2.0.17"
+thiserror = "2.0.21"
 tokio = { version = "1.39.2", features = ["macros", "fs", "net", "rt", "rt-multi-thread"] }
 ```
 
